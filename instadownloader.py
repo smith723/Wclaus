@@ -6,74 +6,117 @@ from  instaloader import *
 
 
 
-class instagram_downloader:
-    user_name = input("[+] username target: ")
+print("\n\n*********** IG NOOB OSINT ***********")
+
+class IGram:
     def __init__(self):
-        self.user_name = input("[+] masukan user name instagram anda: ")
-        self.password  = getpass.getpass() 
-        self.deklarasi = Instaloader()
-        self.login = self.deklarasi.login(self.user_name, self.password)
-        self.dek =  instaloader.Profile.from_username(self.deklarasi.context, instagram_downloader.user_name)
+        self.chose = int(input("""
 
-    def show_fwers(self):
-            try:
-                follower = self.dek.get_followers()
-                print("tunggu sedang di proses.....")
-                for lihat in follower:
-                    print(lihat)
-                print("selesai.....")
-            except (NameError, ValueError, SyntaxError):
-                    print("ada kesalahan pada code")
-
-            except ConnectionException:
-                    print("periksa konesi dan coba lagi")
-
-    def show_fwings(self):
-        try:
-            followings = self.dek.get_followees()
-            print("\ntunggu sedang di prosess....\n")
-            for show in followings:
-                print(show)
-            print("selesai.......")
-
-        except (ValueError, SyntaxError):
-                print("ada kesalahan pade code")
-
-        except instaloader.ConnectionException:
-                print("periksa konesi dan coba lagi")        
-
-    def download_p(self):
-         print(F"profile [{instagram_downloader.user_name}] sedang di download")
-         instaloader.Instaloader().download_profile(instagram_downloader.user_name)
-         print("download selesai,,,,,")
-         
-
-
-    def run(self):
-        opsi = int(input("""
-____opsi___
-            
-[1] look followers
-[2] show followings
-[3] download isi profile
+chose the options
+                               
+[1] download all content from target
+[2] show all follower from target
+[3] show all following from target
 [0] exit
-                         
-masukan opsi: """))
-        match opsi:
+                               
+[+] chose options: """))
+        
+        self.deklar = Instaloader()
+
+    @property
+    def target(self):
+        targe = input("[+] username target: ")
+        return targe
+    
+    @property
+    def run(self):
+        match self.chose:
             case 1:
-               self.show_fwers()
+                print(f"opsi {self.chose} download all content\n")
+                try:
+                    downld = instaloader.Instaloader().download_profile(self.target, profile_pic_only=False)
+                    if downld:
+                       print("downloading.............")
+                    else:
+                       pass
+                    print("download successfuly")
+
+                except (instaloader.ConnectionException, ConnectionAbortedError, ConnectionError) as error:
+                    print("cheking your connection", error)
+
+                except (SyntaxError, ValueError, NameError) as err:
+                    print("checking your source code", err)
+
 
             case 2:
-                self.show_fwings()
-              
-                    
-            case 3:
-                self.download_p()
-            case 0:
-                pass
+                print(f"opsi {self.chose} show followers\n")
+                print("login to your account instagram")
+                try:
+                    login =  self.deklar.login(user=input("[+] your username: "), passwd=getpass.getpass())
+                    coon = instaloader.Profile.from_username(self.deklar.context, self.target)
+                    print("\n")
+                    print("username: ", coon.full_name)
+                    print("userid: ",  coon.userid)
+                    print("num flowr: ", coon.followers)
+                    print("num fwigs: ", coon.followees)
+                    print("bio: ", coon.biography)
+                    print("url bio: ", coon.external_url)
+                    print("\n")
+                    if coon:
+                         show = coon.get_followers()
+                         for look in show:
+                             print(look)
+                    else:
+                        print("login gagal coba lagi")
+                        print("tidak tau bahasa ingris")
 
-                    
+                except (instaloader.ConnectionException, ConnectionError) as e:
+                    print("checking your connection and try again", e)
+
+                except (SyntaxError, ValueError, NameError) as err:
+                    print("checking your source code", err)
                 
+            case 3:
+                print(f"opsi {self.chose} download all followers\n")
+                print("login to your account instagram")
+                try:
+                    login = self.deklar.login(user=input("[+] your username: "), passwd=f"[+] your {getpass.getpass()}")
+                    coon = instaloader.Profile.from_username(self.deklar.context, self.target)
+                    print("\n")
+                    print("username: ", coon.full_name)
+                    print("userid: ",  coon.userid)
+                    print("num flowr: ", coon.followers)
+                    print("num fwigs: ", coon.followees)
+                    print("bio: ", coon.biography)
+                    print("url bio: ", coon.external_url)
+                    print("\n")
+                    if coon:
+                         show = coon.get_followees()
+                         for look in show:
+                             print(look)
+                    else:
+                        print("login gagal coba lagi")
+                        print("tidak tau bahasa ingris")
 
-ob = instagram_downloader()
-ob.run()
+                except (instaloader.ConnectionException, ConnectionError) as e:
+                    print("checking your connection and try again", e)
+
+                except (SyntaxError, ValueError, NameError) as err:
+                    print("checking your source code", err)
+
+
+            case 0:
+                pass    
+
+            
+            
+
+ob = IGram()
+
+ob.run
+                        
+                
+        
+
+
+    
